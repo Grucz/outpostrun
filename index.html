@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="sv">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Utposten, prototyp</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"
+        }
+      }
+    </script>
+  </head>
+  <body data-phase="planning">
+    <header class="hud">
+      <div class="title">Utposten <span class="muted">prototyp, fas 1</span></div>
+      <div class="stat"><span class="label">Poäng</span><span id="budget">0</span></div>
+      <div class="stat"><span class="label">Förråd</span><span id="store">0</span><span class="muted">/20</span></div>
+      <div class="stat"><span class="label">Runda</span><span id="round">1 av 5</span></div>
+      <div class="stat"><span class="label">Läge</span><span id="phase">Planering</span></div>
+    </header>
+
+    <main class="layout">
+      <div id="board" class="board"></div>
+
+      <aside class="panel">
+        <section>
+          <h2>Verktyg</h2>
+          <div id="tool-info"></div>
+        </section>
+        <section>
+          <h2>Ruta</h2>
+          <div id="cell-info"><p class="muted">Peka på kartan.</p></div>
+        </section>
+        <section>
+          <h2>Zombier</h2>
+          <div id="legend"></div>
+        </section>
+        <section>
+          <h2>Felsökning</h2>
+          <label class="field">
+            Visa vägval för
+            <select id="flow">
+              <option value="">Ingen</option>
+            </select>
+          </label>
+          <p class="muted small">Den vita ringen visar räckvidd, den orange visar hur långt skotten hörs.</p>
+        </section>
+      </aside>
+    </main>
+
+    <footer class="toolbar">
+      <div id="tools" class="tools"></div>
+      <div class="actions">
+        <button id="speed" class="secondary">Hastighet 1x</button>
+        <button id="start" class="primary">Starta runda <span class="key">Mellanslag</span></button>
+      </div>
+    </footer>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <div id="overlay" class="overlay" hidden>
+      <div class="overlay-box">
+        <h1 id="overlay-title"></h1>
+        <p id="overlay-text"></p>
+        <button id="restart" class="primary">Spela igen</button>
+      </div>
+    </div>
+
+    <script type="module" src="js/main.js"></script>
+  </body>
+</html>
