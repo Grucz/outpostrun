@@ -17,6 +17,7 @@ export class UI {
       tools: document.getElementById('tools'),
       start: document.getElementById('start'),
       speed: document.getElementById('speed'),
+      view: document.getElementById('view'),
       toolInfo: document.getElementById('tool-info'),
       cellInfo: document.getElementById('cell-info'),
       legend: document.getElementById('legend'),
@@ -68,7 +69,7 @@ export class UI {
       const row = document.createElement('div');
       row.className = 'legend-row';
       const hex = `#${z.color.toString(16).padStart(6, '0')}`;
-      row.innerHTML = `<span class="dot" style="background:${hex}"></span><span><strong>${z.name}</strong> ${z.info}</span>`;
+      row.innerHTML = `<span class="dot" style="background:${hex}"></span><span><strong>${z.name}</strong> ${z.info} Vittring ${z.scent} rutor.</span>`;
       this.el.legend.appendChild(row);
     }
     for (const [key, z] of Object.entries(ZOMBIES)) {
@@ -85,6 +86,7 @@ export class UI {
       this.speed = this.speed === 1 ? 2 : this.speed === 2 ? 4 : 1;
       this.el.speed.textContent = `Hastighet ${this.speed}x`;
     });
+    this.el.view.addEventListener('click', () => this.toggleView());
     this.el.flow.addEventListener('change', () => this.view.setFlowType(this.el.flow.value));
     this.el.restart.addEventListener('click', () => window.location.reload());
 
@@ -99,9 +101,19 @@ export class UI {
         this.game.startRound();
         return;
       }
+      if (e.key.toLowerCase() === 'v') {
+        this.toggleView();
+        return;
+      }
       const t = TOOLS.find((x) => x.hotkey === e.key.toLowerCase());
       if (t) this.setTool(this.tool === t.id ? null : t.id);
     });
+  }
+
+  toggleView() {
+    const mode = this.view.mode === 'angled' ? 'top' : 'angled';
+    this.view.setMode(mode);
+    this.el.view.innerHTML = `Vy: ${mode === 'angled' ? 'vinklad' : 'ovanifrån'} <span class="key">V</span>`;
   }
 
   setTool(id) {

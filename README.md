@@ -1,4 +1,4 @@
-# Utposten, prototyp fas 1
+# Utposten, prototyp fas 1.1
 
 En första spelbar prototyp av spelprojektet: tower defense mot zombier i ett öppet landskap. Grafiken är medvetet enkel. Prototypen ska bara svara på en fråga: känns vägval, hinder och ljud rätt?
 
@@ -22,18 +22,21 @@ Three.js hämtas från jsDelivr när sidan laddas, så datorn behöver vara uppk
 | Högerklick eller Esc | Avmarkera verktyget |
 | Mellanslag eller "Starta runda" | Starta nästa anfall |
 | "Hastighet" | Växla mellan 1x, 2x och 4x |
+| V eller "Vy" | Växla mellan vinklad vy och rak vy ovanifrån |
+| Mushjulet | Zooma i den vinklade vyn |
 | "Visa vägval för" | Visar pilar för hur en zombietyp tar sig till lägret |
 
-Zombierna kommer från vänsterkanten (den rödtonade remsan) och går mot lägret till höger. Varje zombie som når lägret tar av förrådet, och när förrådet är slut är spelet förlorat. Det finns fem rundor.
+Zombierna kommer från vänsterkanten (den rödtonade remsan) och går mot lägret till höger. Varje zombie har en vittring: en människa inom radien blir zombiens mål i stället för lägret (vandrare 2 rutor, koloss 3, löpare 4). Skottljud lockar på längre avstånd, för geväret 9 rutor. Varje zombie som når lägret tar av förrådet, och när förrådet är slut är spelet förlorat. Det finns fem rundor.
 
 Under en runda går det inte att köpa eller ändra något. Mellan rundorna får du 100 poäng plus en bonus på upp till 30 poäng beroende på hur mycket av förrådet som finns kvar. Allt som överlever rundan följer med utan ny kostnad.
 
 ## Saker att testa
 
 1. Sätt en rad värn tvärs över kartan med en lucka. Välj "Vandrare" under "Visa vägval för" och se pilarna gå genom luckan. Byt till "Koloss" och se pilarna gå rakt mot värnen.
-2. Ställ en gevärsskytt mitt på kartan. Den orange ringen visar hur långt skotten hörs. Zombier inom ringen lämnar sin väg och går på skytten.
-3. Jämför med ett armborst på samma plats. Det är nästan tyst och drar inte till sig horden.
-4. Lägg pålar i en trång passage och se dem slitas ner.
+2. Ställ ett armborst precis intill zombiernas väg och ett annat en bit bort. Det nära blir anfallet, det avlägsna lämnas i fred.
+3. Ställ en gevärsskytt mitt på kartan. Den orange ringen visar hur långt skotten hörs. Zombier inom ringen lämnar sin väg och går på skytten.
+4. Jämför med ett armborst på samma plats. Det är nästan tyst och drar inte till sig horden.
+5. Lägg pålar i en trång passage och se dem slitas ner.
 
 ## Filer
 
@@ -49,9 +52,12 @@ Under en runda går det inte att köpa eller ändra något. Mellan rundorna får
 | `js/ui.js` | Knappar, panel och meddelanden |
 | `js/main.js` | Kopplar ihop delarna och styr musen |
 | `test/simulate.mjs` | Automatiska test av spellogiken (`node test/simulate.mjs`) |
+| `test/balance.mjs` | Kör tre försvarsupplägg många gånger och mäter förluster per runda (`node test/balance.mjs`) |
 
 ## Kända begränsningar
 
 Siktlinjer, höjdskillnader, kastare, klättrare, pansrade zombier, fler försvarare, målprioritering och miniatyrlooken kommer i senare faser enligt designdokumentet.
 
-Balansen är grov. I testkörningarna går det lätt att vinna genom att samla tysta armborst nära lägret, och oanvända poäng sparas utan gräns.
+Tilt-shift laddas separat. Om den inte går att hämta körs spelet vidare utan effekten, och en varning syns i webbläsarens konsol.
+
+Balansen är fortfarande grov. En tät ring av armborst kring lägret vinner nästan alltid, och oanvända poäng sparas utan gräns.

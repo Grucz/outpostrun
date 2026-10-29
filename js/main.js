@@ -56,7 +56,7 @@ function frame(now) {
   last = now;
   // Vid högre hastighet delas tiden upp i flera steg så att zombier inte hoppar över rutor.
   for (let s = 0; s < ui.speed; s++) game.update(real);
-  view.render(real * ui.speed);
+  view.render(real * ui.speed, now / 1000);
   requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);

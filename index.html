@@ -8,7 +8,8 @@
     <script type="importmap">
       {
         "imports": {
-          "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"
+          "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
         }
       }
     </script>
@@ -47,6 +48,7 @@
             </select>
           </label>
           <p class="muted small">Den vita ringen visar räckvidd, den orange visar hur långt skotten hörs.</p>
+          <p class="muted small">Mushjulet zoomar i den vinklade vyn. V växlar till rak vy ovanifrån.</p>
         </section>
       </aside>
     </main>
@@ -54,6 +56,7 @@
     <footer class="toolbar">
       <div id="tools" class="tools"></div>
       <div class="actions">
+        <button id="view" class="secondary">Vy: vinklad <span class="key">V</span></button>
         <button id="speed" class="secondary">Hastighet 1x</button>
         <button id="start" class="primary">Starta runda <span class="key">Mellanslag</span></button>
       </div>

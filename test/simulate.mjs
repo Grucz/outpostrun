@@ -104,6 +104,37 @@ function follow(game, type, start, maxSteps = 500) {
   }
 }
 
+// 5b. Vittring: en zombie som passerar nära en tyst skytt går på skytten.
+{
+  const map = new GameMap();
+  const game = new Game(map);
+  game.budget = 100000;
+  const d = game.place('crossbow', map.index(20, 14));
+  d.def = { ...d.def, range: 0 }; // skytten skjuter inte, så att bara vittringen testas
+  game.startRound();
+  game.spawnQueue = [];
+  game.spawn('walker');
+  const z = game.zombies[0];
+  z.x = 18.5;
+  z.z = 14.5;
+  for (let k = 0; k < 200 && d.hp === d.maxHp; k++) game.update(0.05);
+  check('Vittring: vandraren anfaller en skytt inom två rutor', d.hp < d.maxHp, `skyttens tålighet ${Math.ceil(d.hp)}`);
+
+  const map2 = new GameMap();
+  const game2 = new Game(map2);
+  game2.budget = 100000;
+  const d2 = game2.place('crossbow', map2.index(20, 3));
+  d2.def = { ...d2.def, range: 0 };
+  game2.startRound();
+  game2.spawnQueue = [];
+  game2.spawn('walker');
+  const z2 = game2.zombies[0];
+  z2.x = 18.5;
+  z2.z = 14.5;
+  for (let k = 0; k < 100; k++) game2.update(0.05);
+  check('Vittring: en skytt långt bort lämnas i fred', d2.hp === d2.maxHp && z2.lure === null);
+}
+
 // 6. Hela spelet med ett enkelt försvar, flera körningar.
 {
   const results = [];

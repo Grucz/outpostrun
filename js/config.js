@@ -53,10 +53,10 @@ export const DEFENDERS = {
   crossbow: {
     name: 'Armborst',
     cost: 40,
-    hp: 100,
-    range: 5,
-    damage: 32,
-    interval: 1.8,
+    hp: 80,
+    range: 4.5,
+    damage: 28,
+    interval: 2.0,
     noise: 1.2,
     color: 0x3f8f8a,
     info: 'Kortare räckvidd men nästan tyst. Lockar bara zombier i närheten.',
@@ -64,7 +64,7 @@ export const DEFENDERS = {
   rifle: {
     name: 'Gevär',
     cost: 60,
-    hp: 100,
+    hp: 80,
     range: 7,
     damage: 25,
     interval: 1.0,
@@ -78,14 +78,16 @@ export const DEFENDERS = {
  * Zombietyper.
  * aggression (0 till 1): hur villig typen är att anfalla ett hinder i stället
  * för att gå en omväg. strength är skada per sekund mot hinder och försvarare.
+ * scent är vittringen i rutor: en människa inom radien blir zombiens mål.
  */
 export const ZOMBIES = {
   walker: {
     name: 'Vandrare',
     hp: 60,
     speed: 0.9,
-    strength: 8,
+    strength: 10,
     aggression: 0.2,
+    scent: 2,
     size: 0.3,
     campDamage: 1,
     color: 0x6f8f4e,
@@ -97,6 +99,7 @@ export const ZOMBIES = {
     speed: 2.0,
     strength: 6,
     aggression: 0.8,
+    scent: 4,
     size: 0.24,
     campDamage: 1,
     color: 0xb5a642,
@@ -108,6 +111,7 @@ export const ZOMBIES = {
     speed: 0.55,
     strength: 40,
     aggression: 1.0,
+    scent: 3,
     size: 0.46,
     campDamage: 5,
     color: 0x8e3b33,
@@ -117,11 +121,11 @@ export const ZOMBIES = {
 
 /** Vågor per runda. */
 export const WAVES = [
-  [{ type: 'walker', count: 8 }],
-  [{ type: 'walker', count: 12 }, { type: 'runner', count: 4 }],
-  [{ type: 'walker', count: 12 }, { type: 'runner', count: 8 }],
-  [{ type: 'walker', count: 14 }, { type: 'runner', count: 8 }, { type: 'colossus', count: 1 }],
-  [{ type: 'walker', count: 18 }, { type: 'runner', count: 12 }, { type: 'colossus', count: 2 }],
+  [{ type: 'walker', count: 7 }],
+  [{ type: 'walker', count: 10 }, { type: 'runner', count: 4 }],
+  [{ type: 'walker', count: 20 }, { type: 'runner', count: 12 }],
+  [{ type: 'walker', count: 28 }, { type: 'runner', count: 16 }, { type: 'colossus', count: 2 }],
+  [{ type: 'walker', count: 36 }, { type: 'runner', count: 22 }, { type: 'colossus', count: 4 }],
 ];
 
 export const ECONOMY = {
@@ -134,8 +138,10 @@ export const ECONOMY = {
 };
 
 export const RULES = {
-  spawnInterval: 0.7,
+  spawnInterval: 0.5,
   lureDuration: 6,
+  scentMemory: 3,
+  senseInterval: 0.25,
   maxFrameTime: 0.05,
 };
 

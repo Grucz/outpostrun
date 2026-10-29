@@ -236,6 +236,7 @@ export class Game {
       oz: (Math.random() - 0.5) * 0.44,
       lure: null,
       lureTime: 0,
+      senseTimer: Math.random() * RULES.senseInterval,
       attacking: false,
       alive: true,
     };
@@ -265,6 +266,17 @@ export class Game {
     if (z.lure) {
       z.lureTime -= dt;
       if (!z.lure.alive || z.lureTime <= 0) z.lure = null;
+    }
+
+    // Vittring: en människa inom radien går före både lägret och ljud längre bort.
+    z.senseTimer -= dt;
+    if (z.senseTimer <= 0) {
+      z.senseTimer = RULES.senseInterval;
+      const near = this.nearestDefender(z.x, z.z, z.def.scent);
+      if (near) {
+        z.lure = near;
+        z.lureTime = RULES.scentMemory;
+      }
     }
 
     let next = (z.lure ? this.lureField(z.key, z.lure) : this.fields[z.key]).next[i];
@@ -342,6 +354,19 @@ export class Game {
         z.lureTime = RULES.lureDuration;
       }
     }
+  }
+
+  nearestDefender(x, z, radius) {
+    let best = null;
+    let bestDist = radius;
+    for (const d of this.defenders) {
+      const dist = Math.hypot(d.x - x, d.z - z);
+      if (dist <= bestDist) {
+        bestDist = dist;
+        best = d;
+      }
+    }
+    return best;
   }
 
   killZombie(z) {
