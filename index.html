@@ -16,11 +16,12 @@
   </head>
   <body data-phase="planning">
     <header class="hud">
-      <div class="title">Utposten <span class="muted">prototyp, fas 1</span></div>
+      <div class="title">Utposten <span class="muted">prototyp, fas 1.2</span></div>
       <div class="stat"><span class="label">Poäng</span><span id="budget">0</span></div>
       <div class="stat"><span class="label">Förråd</span><span id="store">0</span><span class="muted">/20</span></div>
       <div class="stat"><span class="label">Runda</span><span id="round">1 av 5</span></div>
       <div class="stat"><span class="label">Läge</span><span id="phase">Planering</span></div>
+      <div class="stat"><span class="label">Nivå</span><span id="difficulty">Normal</span></div>
     </header>
 
     <main class="layout">
@@ -63,6 +64,19 @@
     </footer>
 
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <div id="start-screen" class="overlay">
+      <div class="overlay-box">
+        <h1>Utposten</h1>
+        <p>Zombierna kommer från väster i horder. Bygg ditt försvar mellan rundorna och skydda förrådet i lägret i fem rundor.</p>
+        <p class="muted">Välj svårighetsgrad</p>
+        <div class="choice">
+          <button class="primary" data-difficulty="normal">Normal</button>
+          <button class="primary" data-difficulty="hard">Svår</button>
+        </div>
+        <p class="muted small">Normal: horder om 6 zombier, deras hälsa ökar 12 % per runda.<br />Svår: horder om 12 zombier, deras hälsa ökar 25 % per runda.</p>
+      </div>
+    </div>
 
     <div id="overlay" class="overlay" hidden>
       <div class="overlay-box">

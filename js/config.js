@@ -36,14 +36,14 @@ export const STRUCTURES = {
   },
   stakes: {
     name: 'Pålar',
-    cost: 10,
+    cost: 20,
     blocking: false,
     destructible: true,
     hp: 120,
     moveCost: 4,
-    speed: 0.5,
-    dps: 18,
-    wear: 0.5,
+    speed: 0.7,
+    dps: 8,
+    wear: 2,
     info: 'Bromsar och skadar zombier som passerar. Slits ut med tiden.',
   },
 };
@@ -66,8 +66,8 @@ export const DEFENDERS = {
     cost: 60,
     hp: 80,
     range: 7,
-    damage: 25,
-    interval: 1.0,
+    damage: 20,
+    interval: 1.1,
     noise: 9,
     color: 0x2f5d8a,
     info: 'Lång räckvidd. Skotten hörs långt och lockar zombier till skytten.',
@@ -128,6 +128,16 @@ export const WAVES = [
   [{ type: 'walker', count: 36 }, { type: 'runner', count: 22 }, { type: 'colossus', count: 4 }],
 ];
 
+/**
+ * Svårighetsgrader. Zombierna kommer i horder: groupSize zombier med
+ * spawnInterval sekunders mellanrum, sedan groupPause sekunders paus.
+ * hpGrowth är hur mycket zombiernas hälsa ökar per runda (0,25 = 25 %).
+ */
+export const DIFFICULTY = {
+  normal: { name: 'Normal', groupSize: 6, groupPause: 5, spawnInterval: 0.15, hpGrowth: 0.12 },
+  hard: { name: 'Svår', groupSize: 12, groupPause: 8, spawnInterval: 0.12, hpGrowth: 0.25 },
+};
+
 export const ECONOMY = {
   startBudget: 200,
   baseIncome: 100,
@@ -138,7 +148,6 @@ export const ECONOMY = {
 };
 
 export const RULES = {
-  spawnInterval: 0.5,
   lureDuration: 6,
   scentMemory: 3,
   senseInterval: 0.25,

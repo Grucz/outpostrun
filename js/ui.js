@@ -1,4 +1,4 @@
-import { TOOLS, STRUCTURES, DEFENDERS, ZOMBIES, WAVES } from './config.js';
+import { TOOLS, STRUCTURES, DEFENDERS, ZOMBIES, WAVES, DIFFICULTY } from './config.js';
 
 /** Knappar, informationspanel och meddelanden. */
 export class UI {
@@ -14,6 +14,8 @@ export class UI {
       store: document.getElementById('store'),
       round: document.getElementById('round'),
       phase: document.getElementById('phase'),
+      difficulty: document.getElementById('difficulty'),
+      startScreen: document.getElementById('start-screen'),
       tools: document.getElementById('tools'),
       start: document.getElementById('start'),
       speed: document.getElementById('speed'),
@@ -89,9 +91,16 @@ export class UI {
     this.el.view.addEventListener('click', () => this.toggleView());
     this.el.flow.addEventListener('change', () => this.view.setFlowType(this.el.flow.value));
     this.el.restart.addEventListener('click', () => window.location.reload());
+    for (const btn of this.el.startScreen.querySelectorAll('[data-difficulty]')) {
+      btn.addEventListener('click', () => {
+        this.game.setDifficulty(btn.dataset.difficulty);
+        this.el.startScreen.hidden = true;
+      });
+    }
 
     window.addEventListener('keydown', (e) => {
       if (e.target instanceof HTMLSelectElement) return;
+      if (!this.el.startScreen.hidden) return;
       if (e.key === 'Escape') {
         this.setTool(null);
         return;
@@ -149,6 +158,7 @@ export class UI {
     this.el.round.textContent = `${Math.min(g.round + 1, WAVES.length)} av ${WAVES.length}`;
     const labels = { planning: 'Planering', round: 'Anfall pågår', won: 'Seger', lost: 'Förlust' };
     this.el.phase.textContent = labels[g.phase];
+    this.el.difficulty.textContent = DIFFICULTY[g.difficulty].name;
     document.body.dataset.phase = g.phase;
     this.el.start.disabled = g.phase !== 'planning';
     for (const [id, btn] of this.buttons) {
@@ -176,7 +186,7 @@ export class UI {
     const g = this.game;
     this.el.overlayTitle.textContent = won ? 'Utposten höll' : 'Utposten föll';
     this.el.overlayText.textContent = won
-      ? `Ni klarade alla ${WAVES.length} rundor. ${g.stats.killed} zombier stoppades och förrådet har ${g.store} av 20 kvar.`
+      ? `Ni klarade alla ${WAVES.length} rundor på nivån ${DIFFICULTY[g.difficulty].name.toLowerCase()}. ${g.stats.killed} zombier stoppades och förrådet har ${g.store} av 20 kvar.`
       : `Förrådet tog slut i runda ${g.round + 1}. ${g.stats.killed} zombier stoppades innan dess.`;
     this.el.overlay.hidden = false;
   }

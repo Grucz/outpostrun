@@ -9,7 +9,7 @@
  */
 import { GameMap } from '../js/map.js';
 import { Game } from '../js/game.js';
-import { WAVES } from '../js/config.js';
+import { WAVES, DIFFICULTY } from '../js/config.js';
 
 /** Varje plan anger vad som ska finnas från och med en viss runda (index). */
 export const PLANS = {
@@ -31,6 +31,13 @@ export const PLANS = {
     [3, 'crossbow', 31, 10], [3, 'crossbow', 31, 16], [3, 'stakes', 28, 13],
     [4, 'rifle', 33, 13], [4, 'crossbow', 33, 9], [4, 'crossbow', 33, 17],
   ],
+  // Patricks andra upplägg: skyttar i en klunga, två värn och en matta av pålar.
+  palmatta: [
+    [0, 'rifle', 31, 11], [0, 'crossbow', 33, 11], [0, 'rifle', 31, 13], [0, 'crossbow', 33, 13],
+    [0, 'barricade', 32, 10], [0, 'barricade', 32, 14],
+    [1, 'crossbow', 32, 9], [1, 'rifle', 32, 15],
+    ...Array.from({ length: 72 }, (_, k) => [1 + Math.floor(k / 24), 'stakes', 28 + (k % 8), 8 + Math.floor(k / 8)]),
+  ],
   // Bara armborst i en tät ring kring lägret.
   campRing: [
     [0, 'crossbow', 34, 12], [0, 'crossbow', 34, 14], [0, 'crossbow', 36, 11], [0, 'crossbow', 36, 15],
@@ -41,9 +48,9 @@ export const PLANS = {
   ],
 };
 
-function runPlan(plan) {
+function runPlan(plan, difficulty) {
   const map = new GameMap();
-  const game = new Game(map);
+  const game = new Game(map, difficulty);
   const rounds = [];
   let lost = 0;
   game.on('removed', (e) => {
@@ -71,27 +78,21 @@ function runPlan(plan) {
 }
 
 const RUNS = Number(process.env.RUNS ?? 30);
-for (const [name, plan] of Object.entries(PLANS)) {
-  const perRound = WAVES.map(() => ({ lost: 0, storeLoss: 0, n: 0 }));
-  let wins = 0;
-  let budget = 0;
-  for (let k = 0; k < RUNS; k++) {
-    const res = runPlan(plan);
-    if (res.won) wins++;
-    budget += res.budget;
-    res.rounds.forEach((r, i) => {
-      perRound[i].lost += r.lost;
-      perRound[i].storeLoss += r.storeLoss;
-      perRound[i].n++;
-    });
+for (const difficulty of Object.keys(DIFFICULTY)) {
+  console.log(`\n===== ${DIFFICULTY[difficulty].name} =====`);
+  for (const [name, plan] of Object.entries(PLANS)) {
+    const perRound = WAVES.map(() => ({ lost: 0, storeLoss: 0, n: 0 }));
+    let wins = 0;
+    for (let k = 0; k < RUNS; k++) {
+      const res = runPlan(plan, difficulty);
+      if (res.won) wins++;
+      res.rounds.forEach((r, i) => {
+        perRound[i].lost += r.lost;
+        perRound[i].storeLoss += r.storeLoss;
+        perRound[i].n++;
+      });
+    }
+    const fmt = (key) => perRound.map((r) => (r.n ? (r[key] / r.n).toFixed(1) : '-')).join(' / ');
+    console.log(`${name.padEnd(10)} vinst ${String(wins).padStart(2)}/${RUNS}   förlorade försvarare per runda: ${fmt('lost')}   skada på förrådet: ${fmt('storeLoss')}`);
   }
-  console.log(`\n${name}: vinst ${wins}/${RUNS}, sparade poäng i snitt ${Math.round(budget / RUNS)}`);
-  console.table(
-    perRound.map((r, i) => ({
-      runda: i + 1,
-      'spelade av': r.n,
-      'förlorade försvarare': r.n ? (r.lost / r.n).toFixed(1) : '-',
-      'skada på förråd': r.n ? (r.storeLoss / r.n).toFixed(1) : '-',
-    })),
-  );
 }

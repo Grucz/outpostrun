@@ -1,4 +1,4 @@
-import { STRUCTURES, DEFENDERS, ZOMBIES, WAVES, ECONOMY, RULES, TERRAIN } from './config.js';
+import { STRUCTURES, DEFENDERS, ZOMBIES, WAVES, ECONOMY, RULES, TERRAIN, DIFFICULTY } from './config.js';
 import { computeFlowField } from './flowfield.js';
 
 let nextId = 1;
@@ -9,8 +9,10 @@ let nextId = 1;
  * gränssnittet lyssnar på. Det gör att logiken kan testas utan webbläsare.
  */
 export class Game {
-  constructor(map) {
+  constructor(map, difficulty = 'normal') {
     this.map = map;
+    this.difficulty = difficulty;
+    this.diff = DIFFICULTY[difficulty];
     this.zombies = [];
     this.defenders = [];
     this.structures = [];
@@ -20,6 +22,7 @@ export class Game {
     this.store = ECONOMY.storeMax;
     this.spawnQueue = [];
     this.spawnTimer = 0;
+    this.spawnCount = 0;
     this.fields = {};
     this.lureFields = new Map();
     this.fieldsDirty = true;
@@ -183,6 +186,15 @@ export class Game {
     this.emit('removed', e);
   }
 
+  /** Svårighetsgraden kan bara ändras innan första rundan har startat. */
+  setDifficulty(key) {
+    if (!DIFFICULTY[key] || this.round > 0 || this.phase !== 'planning') return false;
+    this.difficulty = key;
+    this.diff = DIFFICULTY[key];
+    this.emit('state');
+    return true;
+  }
+
   // ---------- Rundor ----------
 
   startRound() {
@@ -190,6 +202,7 @@ export class Game {
     if (this.fieldsDirty) this.recomputeFields();
     this.spawnQueue = buildQueue(WAVES[this.round]);
     this.spawnTimer = 0;
+    this.spawnCount = 0;
     this.phase = 'round';
     this.placedThisPhase.clear();
     this.emit('state');
@@ -202,9 +215,12 @@ export class Game {
     if (this.fieldsDirty) this.recomputeFields();
 
     this.spawnTimer -= dt;
+    // Zombierna kommer i horder: en grupp tätt efter varandra, sedan en paus.
     while (this.spawnQueue.length > 0 && this.spawnTimer <= 0) {
       this.spawn(this.spawnQueue.shift());
-      this.spawnTimer += RULES.spawnInterval;
+      this.spawnCount++;
+      this.spawnTimer +=
+        this.spawnCount % this.diff.groupSize === 0 ? this.diff.groupPause : this.diff.spawnInterval;
     }
 
     for (const z of [...this.zombies]) {
@@ -223,13 +239,14 @@ export class Game {
     const i = cells[Math.floor(Math.random() * cells.length)];
     const { x, z } = this.map.center(i);
     const def = ZOMBIES[type];
+    const hp = def.hp * (1 + this.diff.hpGrowth * this.round);
     const zombie = {
       id: nextId++,
       kind: 'zombie',
       key: type,
       def,
-      hp: def.hp,
-      maxHp: def.hp,
+      hp,
+      maxHp: hp,
       x: x + (Math.random() - 0.5) * 0.5,
       z: z + (Math.random() - 0.5) * 0.5,
       ox: (Math.random() - 0.5) * 0.44,

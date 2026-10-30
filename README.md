@@ -1,4 +1,4 @@
-# Utposten, prototyp fas 1.1
+# Utposten, prototyp fas 1.2
 
 En första spelbar prototyp av spelprojektet: tower defense mot zombier i ett öppet landskap. Grafiken är medvetet enkel. Prototypen ska bara svara på en fråga: känns vägval, hinder och ljud rätt?
 
@@ -13,6 +13,8 @@ Vill du testa lokalt på en Mac kan du öppna Terminal i mappen och skriva `pyth
 Three.js hämtas från jsDelivr när sidan laddas, så datorn behöver vara uppkopplad.
 
 ## Så spelar du
+
+Välj svårighetsgrad när spelet startar. På Normal kommer zombierna i horder om 6 och deras hälsa ökar 12 % per runda. På Svår kommer de i horder om 12 och hälsan ökar 25 % per runda.
 
 | Gör så här | Effekt |
 |---|---|
@@ -52,7 +54,7 @@ Under en runda går det inte att köpa eller ändra något. Mellan rundorna får
 | `js/ui.js` | Knappar, panel och meddelanden |
 | `js/main.js` | Kopplar ihop delarna och styr musen |
 | `test/simulate.mjs` | Automatiska test av spellogiken (`node test/simulate.mjs`) |
-| `test/balance.mjs` | Kör tre försvarsupplägg många gånger och mäter förluster per runda (`node test/balance.mjs`) |
+| `test/balance.mjs` | Kör fyra försvarsupplägg många gånger per svårighetsgrad och mäter förluster per runda (`node test/balance.mjs`) |
 
 ## Kända begränsningar
 
@@ -60,4 +62,4 @@ Siktlinjer, höjdskillnader, kastare, klättrare, pansrade zombier, fler försva
 
 Tilt-shift laddas separat. Om den inte går att hämta körs spelet vidare utan effekten, och en varning syns i webbläsarens konsol.
 
-Balansen är fortfarande grov. En tät ring av armborst kring lägret vinner nästan alltid, och oanvända poäng sparas utan gräns.
+Balansen är fortfarande grov. På Normal vinner en tät ring av armborst kring lägret nästan alltid, och oanvända poäng sparas utan gräns.

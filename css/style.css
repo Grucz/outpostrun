@@ -289,6 +289,17 @@ button.primary .key {
   margin-top: 0;
 }
 
+.choice {
+  display: flex;
+  justify-content: center;
+  gap: 0.8rem;
+  margin: 0.8rem 0;
+}
+
+.choice button {
+  min-width: 7rem;
+}
+
 @media (max-width: 900px) {
   .layout {
     grid-template-columns: 1fr;
